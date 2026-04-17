@@ -8,9 +8,11 @@ app.add_middleware(
     allow_methods=["*"],
 )
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
 
 @app.get("/guess")
 async def guess(q: str):
