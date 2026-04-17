@@ -1,5 +1,17 @@
 from fastapi import FastAPI
-from api.routes import router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-app.include_router(router, prefix="/api")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+)
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+@app.get("/guess")
+async def guess(q: str):
+    return 1

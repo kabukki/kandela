@@ -22,7 +22,7 @@ function App() {
     setHasResponded(false)
 
     try {
-      const res = await fetch(`/guess?q=${encodeURIComponent(trimmed)}`)
+      const res = await fetch(`http://localhost:8000/guess?q=${encodeURIComponent(trimmed)}`)
       setGuess('')
       setHasResponded(true)
 
@@ -31,11 +31,11 @@ function App() {
         return
       }
 
-      const data: { score: number } = await res.json()
-      setResult(data.score)
+      const score: number = await res.json()
+      setResult(score)
       setAttempts((prev) => {
         const next = new Map(prev)
-        next.set(trimmed, data.score)
+        next.set(trimmed, score)
         return next
       })
     } catch {
