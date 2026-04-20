@@ -7,6 +7,10 @@ class WordNotFoundError(Exception):
         super().__init__(f"Word not in vocabulary: {word!r}")
 
 
+def get_daily_word():
+    return "house"
+
+
 def get_similarity(model: KeyedVectors, a: str, b: str):
     if a not in model:
         raise WordNotFoundError(a)

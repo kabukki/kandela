@@ -46,12 +46,12 @@ function App() {
       setAttempts((prev) => {
         const next = new Map(prev)
         next.set(data.word, data.similarity)
+        if (data.found) {
+          alert(`Congrats! You found the word after ${next.size} attempts`);
+        }
         return next
       })
 
-      if (data.found) {
-        alert(`Congrats! You found the word after ${attempts.size + 1} attemps`);
-      }
     } catch {
       setResult(null)
       setHasResponded(true)
