@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import chroma from 'chroma-js'
+import { guessGuessGet } from '../api/sdk.gen';
+import { client } from '../api/client.gen';
 
 const scale = chroma.scale(['#ff0000', '#ffff00', '#00ff00']).domain([0, 50, 100]).mode('lch');
+
+client.setConfig({
+  baseUrl: 'http://localhost:8000'
+})
 
 function App() {
   const [guess, setGuess] = useState('')
@@ -22,22 +28,30 @@ function App() {
     setHasResponded(false)
 
     try {
-      const res = await fetch(`http://localhost:8000/guess?q=${encodeURIComponent(trimmed)}`)
+      const { data, error } = await guessGuessGet({
+        query: {
+          q: trimmed
+        }
+      })
+
       setGuess('')
       setHasResponded(true)
 
-      if (res.status === 404) {
+      if (error) {
         setResult(null)
         return
       }
 
-      const score: number = await res.json()
-      setResult(score)
+      setResult(data.similarity)
       setAttempts((prev) => {
         const next = new Map(prev)
-        next.set(trimmed, score)
+        next.set(data.word, data.similarity)
         return next
       })
+
+      if (data.found) {
+        alert(`Congrats! You found the word after ${attempts.size + 1} attemps`);
+      }
     } catch {
       setResult(null)
       setHasResponded(true)

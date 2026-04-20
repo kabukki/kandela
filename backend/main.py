@@ -1,7 +1,25 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from gensim.models import KeyedVectors
+from models import GuessResponse
+from similarity import get_similarity
+
+ml_models: dict[KeyedVectors] = {}
+target = "house"
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Loading model...")
+    ml_models["word2vec"] = KeyedVectors.load("scripts/model.kv")
+    print("Model loaded", ml_models["word2vec"])
+    yield
+    ml_models.clear()
+
+
+app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,6 +32,20 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/guess")
+@app.get("/word")
+async def word():
+    return target
+
+
+@app.get("/guess", response_model=GuessResponse)
 async def guess(q: str):
-    return 1
+    word = q.strip().lower()
+    try:
+        similarity = round(100 * get_similarity(ml_models["word2vec"], target, word))
+        return GuessResponse(
+            word=word,
+            similarity=similarity,
+            found=similarity == 100,
+        )
+    except Exception:
+        raise HTTPException(status_code=404, detail="Unknown word")

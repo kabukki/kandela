@@ -1,0 +1,10 @@
+house
+cat
+ocean
+day
+night
+phone
+human
+art
+water
+fire
