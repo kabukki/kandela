@@ -4,7 +4,7 @@ import chroma from 'chroma-js'
 import { guessGuessGet } from '../api/sdk.gen';
 import { client } from '../api/client.gen';
 
-const scale = chroma.scale(['#ff0000', '#ffff00', '#00ff00']).domain([0, 50, 100]).mode('lch');
+const scale = chroma.scale(['#ff0000', '#ffff00', '#00ff00']).domain([0, 0.5, 1]).mode('lch');
 
 client.setConfig({
   baseUrl: 'http://localhost:8000'
@@ -83,7 +83,7 @@ function App() {
         </form>
         {hasResponded && (
           <div className='mt-4 text-lg text-center' aria-live='polite'>
-            {result === null ? 'Unknown word' : percentFmt.format(result / 100)}
+            {result === null ? 'Unknown word' : percentFmt.format(result)}
           </div>
         )}
         {sortedAttempts.length > 0 && (
@@ -93,7 +93,7 @@ function App() {
               {sortedAttempts.map((a, idx) => (
                 <li key={idx} className='flex items-center justify-between rounded-md border border-zinc-800 bg-zinc-900 px-4 py-2'>
                   <span className='truncate'>{a.guess}</span>
-                  <span className='ml-4 font-mono tabular-nums' style={{ color: scale(a.score).hex() }}>{percentFmt.format(a.score / 100)}</span>
+                  <span className='ml-4 font-mono tabular-nums' style={{ color: scale(a.score).hex() }}>{percentFmt.format(a.score)}</span>
                 </li>
               ))}
             </ul>

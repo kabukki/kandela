@@ -1,3 +1,5 @@
+from typing import NamedTuple
+
 from gensim.models import KeyedVectors
 
 
@@ -5,6 +7,11 @@ class WordNotFoundError(Exception):
     def __init__(self, word: str):
         self.word = word
         super().__init__(f"Word not in vocabulary: {word!r}")
+
+
+class Similarity(NamedTuple):
+    value: float
+    match: bool
 
 
 def get_daily_word():
@@ -18,7 +25,4 @@ def get_similarity(model: KeyedVectors, a: str, b: str):
     if b not in model:
         raise WordNotFoundError(b)
 
-    if a == b:
-        return 1.0
-
-    return float(model.similarity(a, b))
+    return Similarity(value=float(model.similarity(a, b)), match=(a == b))

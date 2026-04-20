@@ -1,5 +1,4 @@
 import logging
-import math
 from contextlib import asynccontextmanager
 
 from core import WordNotFoundError, get_daily_word, get_similarity
@@ -41,8 +40,8 @@ async def guess(q: str):
         similarity = get_similarity(ml_models["word2vec"], get_daily_word(), word)
         return GuessResponse(
             word=word,
-            similarity=round(100 * similarity),
-            found=math.isclose(similarity, 1.0),
+            similarity=round(similarity.value, ndigits=4),
+            found=similarity.match,
         )
     except WordNotFoundError:
         raise HTTPException(status_code=404, detail="Unknown word")
