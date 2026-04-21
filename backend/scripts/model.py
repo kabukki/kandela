@@ -10,12 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 def is_good_candidate(word: str) -> bool:
-    return len(word) >= 3 and word.isalpha() and word not in STOPWORDS
+    return word not in STOPWORDS
 
 
 def main():
     data_dir = Path(__file__).parent
-    vocabulary_file = data_dir / "google-10000-english.txt"
+    vocabulary_file = data_dir / "The_Oxford_3000.txt"
     model_output = data_dir / "model.kv"
 
     with vocabulary_file.open(encoding="utf-8") as f:
