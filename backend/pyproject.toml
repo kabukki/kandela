@@ -1,5 +1,5 @@
 [project]
-name = "almost"
+name = "app"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -9,10 +9,14 @@ dependencies = [
     "gensim>=4.4.0",
 ]
 
-[tool.fastapi]
-entrypoint = "main:app"
-
 [dependency-groups]
 dev = [
     "ruff>=0.15.11",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.fastapi]
+entrypoint = "app.main:app"

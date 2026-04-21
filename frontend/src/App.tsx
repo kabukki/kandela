@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import chroma from 'chroma-js'
-import { guessGuessGet } from '../api/sdk.gen';
+import { guess } from '../api/sdk.gen';
 import { client } from '../api/client.gen';
 
 const scale = chroma.scale(['#ff0000', '#ffff00', '#00ff00']).domain([0, 0.5, 1]).mode('lch');
 
 client.setConfig({
-  baseUrl: 'http://localhost:8000'
+  baseUrl: import.meta.env.VITE_API_URL,
 })
 
 function App() {
-  const [guess, setGuess] = useState('')
+  const [input, setInput] = useState('')
   const [result, setResult] = useState<number | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [attempts, setAttempts] = useState<Map<string, number>>(new Map())
@@ -21,20 +21,20 @@ function App() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const trimmed = guess.trim()
+    const trimmed = input.trim()
     if (!trimmed) return
     setSubmitting(true)
     setResult(null)
     setHasResponded(false)
 
     try {
-      const { data, error } = await guessGuessGet({
+      const { data, error } = await guess({
         query: {
           q: trimmed
         }
       })
 
-      setGuess('')
+      setInput('')
       setHasResponded(true)
 
       if (error) {
@@ -73,8 +73,8 @@ function App() {
             className='w-full text-2xl px-5 py-4 rounded-lg bg-zinc-900 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500'
             type='text'
             placeholder='Type your guess...'
-            value={guess}
-            onChange={(e) => setGuess(e.target.value)}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             aria-label='Guess input'
           />
           <button className='shrink-0 text-lg px-5 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-50' type='submit' disabled={submitting} aria-label='Submit guess'>

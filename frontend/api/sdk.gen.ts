@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GuessGuessGetData, GuessGuessGetErrors, GuessGuessGetResponses, RootGetData, RootGetResponses, WordWordGetData, WordWordGetResponses } from './types.gen';
+import type { GuessData, GuessErrors, GuessResponses, RootData, RootResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -21,14 +21,9 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Root
  */
-export const rootGet = <ThrowOnError extends boolean = false>(options?: Options<RootGetData, ThrowOnError>) => (options?.client ?? client).get<RootGetResponses, unknown, ThrowOnError>({ url: '/', ...options });
-
-/**
- * Word
- */
-export const wordWordGet = <ThrowOnError extends boolean = false>(options?: Options<WordWordGetData, ThrowOnError>) => (options?.client ?? client).get<WordWordGetResponses, unknown, ThrowOnError>({ url: '/word', ...options });
+export const root = <ThrowOnError extends boolean = false>(options?: Options<RootData, ThrowOnError>) => (options?.client ?? client).get<RootResponses, unknown, ThrowOnError>({ url: '/', ...options });
 
 /**
  * Guess
  */
-export const guessGuessGet = <ThrowOnError extends boolean = false>(options: Options<GuessGuessGetData, ThrowOnError>) => (options.client ?? client).get<GuessGuessGetResponses, GuessGuessGetErrors, ThrowOnError>({ url: '/guess', ...options });
+export const guess = <ThrowOnError extends boolean = false>(options: Options<GuessData, ThrowOnError>) => (options.client ?? client).get<GuessResponses, GuessErrors, ThrowOnError>({ url: '/guess', ...options });

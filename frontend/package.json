@@ -8,7 +8,8 @@
 		"build": "tsc -b && vite build",
 		"preview": "npm run build && vite preview",
 		"deploy": "npm run build && wrangler deploy",
-		"types": "wrangler types"
+		"openapi": "openapi-ts --input ../backend/openapi.json --output ./api",
+		"openapi:watch": "npm run openapi -- --watch"
 	},
 	"dependencies": {
 		"chroma-js": "^3.1.2",
