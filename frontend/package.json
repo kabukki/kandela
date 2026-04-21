@@ -12,7 +12,9 @@
 		"openapi:watch": "npm run openapi -- --watch"
 	},
 	"dependencies": {
-		"chroma-js": "^3.1.2",
+		"@tsparticles/confetti": "^3.9.1",
+		"d3-force": "^3.0.0",
+		"d3-interpolate": "^3.0.1",
 		"ml-distance": "^4.0.1",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
@@ -22,7 +24,8 @@
 		"@cloudflare/vite-plugin": "^1.13.19",
 		"@hey-api/openapi-ts": "0.96.1",
 		"@tailwindcss/vite": "^4.1.16",
-		"@types/chroma-js": "^3.1.2",
+		"@types/d3-force": "^3.0.10",
+		"@types/d3-interpolate": "^3.0.4",
 		"@types/react": "^19.1.10",
 		"@types/react-dom": "^19.1.7",
 		"@vitejs/plugin-react": "^5.0.0",

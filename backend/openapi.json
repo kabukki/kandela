@@ -21,6 +21,24 @@
         }
       }
     },
+    "/vocabulary": {
+      "get": {
+        "summary": "Vocabulary",
+        "operationId": "vocabulary",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VocabularyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/guess": {
       "get": {
         "summary": "Guess",
@@ -59,6 +77,45 @@
           }
         }
       }
+    },
+    "/similar": {
+      "get": {
+        "summary": "Similar",
+        "operationId": "similar",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimilarWordsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -73,7 +130,7 @@
           "similarity": {
             "type": "number",
             "maximum": 1.0,
-            "minimum": 0.0,
+            "minimum": -1.0,
             "title": "Similarity",
             "description": "Cosine similarity with the daily word"
           },
@@ -103,6 +160,45 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "SimilarWord": {
+        "properties": {
+          "word": {
+            "type": "string",
+            "title": "Word",
+            "description": "A word similar to the query"
+          },
+          "similarity": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Similarity",
+            "description": "Cosine similarity with the query word"
+          }
+        },
+        "type": "object",
+        "required": [
+          "word",
+          "similarity"
+        ],
+        "title": "SimilarWord"
+      },
+      "SimilarWordsResponse": {
+        "properties": {
+          "words": {
+            "items": {
+              "$ref": "#/components/schemas/SimilarWord"
+            },
+            "type": "array",
+            "title": "Words",
+            "description": "Top similar words ordered by similarity descending"
+          }
+        },
+        "type": "object",
+        "required": [
+          "words"
+        ],
+        "title": "SimilarWordsResponse"
       },
       "ValidationError": {
         "properties": {
@@ -143,6 +239,23 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "VocabularyResponse": {
+        "properties": {
+          "words": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Words",
+            "description": "Words eligible to be the daily word"
+          }
+        },
+        "type": "object",
+        "required": [
+          "words"
+        ],
+        "title": "VocabularyResponse"
       }
     }
   }

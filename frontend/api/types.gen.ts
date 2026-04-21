@@ -39,6 +39,36 @@ export type HttpValidationError = {
 };
 
 /**
+ * SimilarWord
+ */
+export type SimilarWord = {
+    /**
+     * Word
+     *
+     * A word similar to the query
+     */
+    word: string;
+    /**
+     * Similarity
+     *
+     * Cosine similarity with the query word
+     */
+    similarity: number;
+};
+
+/**
+ * SimilarWordsResponse
+ */
+export type SimilarWordsResponse = {
+    /**
+     * Words
+     *
+     * Top similar words ordered by similarity descending
+     */
+    words: Array<SimilarWord>;
+};
+
+/**
  * ValidationError
  */
 export type ValidationError = {
@@ -66,6 +96,18 @@ export type ValidationError = {
     };
 };
 
+/**
+ * VocabularyResponse
+ */
+export type VocabularyResponse = {
+    /**
+     * Words
+     *
+     * Words eligible to be the daily word
+     */
+    words: Array<string>;
+};
+
 export type RootData = {
     body?: never;
     path?: never;
@@ -79,6 +121,22 @@ export type RootResponses = {
      */
     200: unknown;
 };
+
+export type VocabularyData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/vocabulary';
+};
+
+export type VocabularyResponses = {
+    /**
+     * Successful Response
+     */
+    200: VocabularyResponse;
+};
+
+export type VocabularyResponse2 = VocabularyResponses[keyof VocabularyResponses];
 
 export type GuessData = {
     body?: never;
@@ -109,3 +167,33 @@ export type GuessResponses = {
 };
 
 export type GuessResponse2 = GuessResponses[keyof GuessResponses];
+
+export type SimilarData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Q
+         */
+        q: string;
+    };
+    url: '/similar';
+};
+
+export type SimilarErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type SimilarError = SimilarErrors[keyof SimilarErrors];
+
+export type SimilarResponses = {
+    /**
+     * Successful Response
+     */
+    200: SimilarWordsResponse;
+};
+
+export type SimilarResponse = SimilarResponses[keyof SimilarResponses];
