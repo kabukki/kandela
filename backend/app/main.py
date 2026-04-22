@@ -14,7 +14,7 @@ from .core import (
     get_similarity,
     get_vocabulary,
 )
-from .dependencies import ModelDep
+from .dependencies import ModelDep, get_settings
 from .models import GuessResponse, SimilarWord, SimilarWordsResponse, VocabularyResponse
 
 logging.basicConfig(level=logging.INFO)
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     logger.info("Loading model...")
     app.state.model = KeyedVectors.load("scripts/model.kv")
-    logger.info("Model loaded", app.state.model)
+    logger.info("Model loaded")
     yield
 
 
@@ -33,10 +33,11 @@ def generate_operation_id(route: APIRoute):
     return route.name
 
 
+settings = get_settings()
 app = FastAPI(lifespan=lifespan, generate_unique_id_function=generate_operation_id)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[settings.cors_origin],
     allow_methods=["*"],
 )
 
