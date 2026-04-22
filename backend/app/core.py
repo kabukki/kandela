@@ -19,7 +19,6 @@ def get_vocabulary(model: KeyedVectors) -> list[str]:
 
 
 def get_daily_word(model: KeyedVectors, date: date):
-    return "travel"
     vocabulary = get_vocabulary(model)
     seed = date.isoformat().encode()
     digest = hashlib.sha256(seed).digest()
