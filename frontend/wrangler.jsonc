@@ -1,0 +1,10 @@
+{
+	"name": "kandela",
+	"compatibility_date": "2025-11-05",
+	"assets": {
+		"not_found_handling": "single-page-application"
+	},
+	"observability": {
+		"enabled": true
+	}
+}

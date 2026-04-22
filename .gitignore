@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+__pycache__
 
 # Editor directories and files
 .vscode/*
@@ -29,6 +30,3 @@ dist-ssr
 !.dev.vars.example
 .env*
 !.env.example
-*.msgpack
-*.bin
-*.jsonl

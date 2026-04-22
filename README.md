@@ -1,4 +1,13 @@
-# Hot & Cold
+# 📐 Almost
+
+A daily word-guessing game based on semantic similarity
+
+## Stack
+
+- Frontend
+  - React
+- Backend
+  - FastAPI
 
 ## Credits
 
