@@ -4,6 +4,8 @@ Guess the daily word using semantic similarity
 
 [→ Play today's puzzle!](https://kandela.le-roux.dev)
 
+![alt text](image.png)
+
 ## How it works
 
 Each day, a single word is chosen. Your goal is to find it.

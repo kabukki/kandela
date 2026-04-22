@@ -1,8 +1,10 @@
 import hashlib
+import math
 from datetime import date
-from typing import NamedTuple
 
 from gensim.models import KeyedVectors
+
+from .models import Similarity
 
 
 class WordNotFoundError(Exception):
@@ -11,17 +13,13 @@ class WordNotFoundError(Exception):
         super().__init__(f"Word not in vocabulary: {word!r}")
 
 
-class Similarity(NamedTuple):
-    value: float
-    match: bool
-
-
 def get_vocabulary(model: KeyedVectors) -> list[str]:
     """Returns all words in the model's vocabulary, usable as daily words."""
     return list(model.index_to_key)
 
 
 def get_daily_word(model: KeyedVectors, date: date):
+    return "travel"
     vocabulary = get_vocabulary(model)
     seed = date.isoformat().encode()
     digest = hashlib.sha256(seed).digest()
@@ -30,12 +28,15 @@ def get_daily_word(model: KeyedVectors, date: date):
 
 
 def get_most_similar(
-    model: KeyedVectors, word: str, topn: int = 10
-) -> list[tuple[str, float]]:
+    model: KeyedVectors, word: str, topn: int
+) -> list[tuple[str, Similarity]]:
     if word not in model:
         raise WordNotFoundError(word)
 
-    return [(w, float(s)) for w, s in model.most_similar(word, topn=topn)]
+    return [
+        (w, Similarity(value=float(s), rank=i + 1))
+        for i, (w, s) in enumerate(model.most_similar(word, topn=topn))
+    ]
 
 
 def get_similarity(model: KeyedVectors, a: str, b: str):
@@ -45,4 +46,16 @@ def get_similarity(model: KeyedVectors, a: str, b: str):
     if b not in model:
         raise WordNotFoundError(b)
 
-    return Similarity(value=float(model.similarity(a, b)), match=(a == b))
+    return Similarity(
+        value=float(model.similarity(a, b)),
+        rank=0 if a == b else int(model.rank(a, b)),
+    )
+
+
+def get_score(model: KeyedVectors, rank: int):
+    if rank == 0:
+        return 1000
+    t = math.log10(rank) / math.log10(len(model.index_to_key))
+    return max(0, round(999 * (1 - t)))
+
+    # return Similarity(value=float(model.similarity(a, b)), rank=int(model.rank(a, b)))

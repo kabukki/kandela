@@ -15,11 +15,11 @@ export type GuessResponse = {
      */
     word: string;
     /**
-     * Similarity
+     * Score
      *
-     * Cosine similarity with the daily word
+     * The score for the guess
      */
-    similarity: number;
+    score: number;
     /**
      * Found
      *
@@ -49,11 +49,11 @@ export type SimilarWord = {
      */
     word: string;
     /**
-     * Similarity
+     * Score
      *
-     * Cosine similarity with the query word
+     * The score for the similar word
      */
-    similarity: number;
+    score: number;
 };
 
 /**
@@ -63,7 +63,7 @@ export type SimilarWordsResponse = {
     /**
      * Words
      *
-     * Top similar words ordered by similarity descending
+     * Top similar words ordered by rank descending
      */
     words: Array<SimilarWord>;
 };

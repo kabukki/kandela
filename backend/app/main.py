@@ -11,6 +11,7 @@ from .core import (
     WordNotFoundError,
     get_daily_word,
     get_most_similar,
+    get_score,
     get_similarity,
     get_vocabulary,
 )
@@ -52,34 +53,42 @@ async def vocabulary(model: ModelDep):
     return VocabularyResponse(words=get_vocabulary(model))
 
 
-@app.get("/guess", response_model=GuessResponse)
+@app.post("/guess", response_model=GuessResponse)
 async def guess(q: str, model: ModelDep):
-    guess = q.strip().lower()
     try:
+        guess = q.strip().lower()
         word = get_daily_word(model, datetime.now(timezone.utc).date())
+        similarity = get_similarity(model, word, guess)
+        score = get_score(model, similarity.rank)
+
         logger.info(
-            "Comparing guess '%s' to daily word '%s'",
+            "guess='%s' target='%s' rank=%d score=%d",
             guess,
             word,
+            similarity.rank,
+            score,
         )
-        similarity = get_similarity(model, word, guess)
-        return GuessResponse(
-            word=guess,
-            similarity=round(similarity.value, ndigits=4),
-            found=similarity.match,
-        )
-    except WordNotFoundError:
-        raise HTTPException(status_code=404, detail="Unknown word")
+
+        return GuessResponse(word=guess, score=score, found=(similarity.is_target))
+    except WordNotFoundError as e:
+        if e.word == guess:
+            raise HTTPException(status_code=404, detail="Unknown word")
+        logger.error(f"Daily word {e.word!r} not found in model")
+        raise HTTPException(status_code=500, detail="Server vocabulary error")
 
 
 @app.get("/similar", response_model=SimilarWordsResponse)
 async def similar(q: str, model: ModelDep):
     word = q.strip().lower()
     try:
-        results = get_most_similar(model, word, topn=10)
+        results = get_most_similar(model, word, topn=50)
         return SimilarWordsResponse(
             words=[
-                SimilarWord(word=w, similarity=round(s, ndigits=4)) for w, s in results
+                SimilarWord(
+                    word=word,
+                    score=get_score(model, similarity.rank),
+                )
+                for word, similarity in results
             ],
         )
     except WordNotFoundError:

@@ -18,19 +18,14 @@ client.setConfig({
 
 type WordData = {
   word: string
-  sim: number
+  score: number
   ghost: boolean
   x: number
   y: number
 }
 
-const normalize = (sim: number) => Math.max(0, sim)
-const toCandelas = (sim: number) => Math.round(Math.pow(normalize(sim), 1.3) * 100)
-const toRadius = (sim: number, vp: { w: number; h: number }) => {
-  const minR = 40
-  const maxR = Math.min(vp.w, vp.h) / 2 - 40
-  return minR + (1 - normalize(sim)) * (maxR - minR)
-}
+const toRadius = (score: number, vp: { w: number; h: number }) => 80 + Math.pow(1 - score / 1000, 1.2) * (Math.min(vp.w, vp.h) * 0.42 - 80);
+
 const hash = (word: string) => {
   let h = 0
   for (let i = 0; i < word.length; i++) h = (h * 31 + word.charCodeAt(i)) | 0
@@ -59,8 +54,8 @@ function Word({
       style={{
         left: x,
         top: y,
-        fontSize: 14 + normalize(score) * 18,
-        color: ghost ? 'var(--color-ghost)' : warmColor(score),
+        fontSize: 14 + (score / 1000) * 18,
+        color: ghost ? 'var(--color-ghost)' : warmColor(score / 1000),
       }}
     >
       <span
@@ -71,7 +66,7 @@ function Word({
       >
         {word}
         <span className="font-mono text-[9px] tracking-[0.15em] text-ink-faint ml-1.5 align-middle">
-          {toCandelas(score)}
+          {score}
         </span>
       </span>
     </div>
@@ -92,13 +87,13 @@ function useForceLayout(words: Omit<WordData, 'x' | 'y'>[]): WordData[] {
     }
     const nodes = words.map((w) => {
       const angle = toAngle(w.word)
-      const radius = toRadius(w.sim, viewport)
+      const radius = toRadius(w.score, viewport)
       return {
         word: w.word,
         ghost: w.ghost,
         anchorX: viewport.cx + Math.cos(angle) * radius,
         anchorY: viewport.cy + Math.sin(angle) * radius,
-        radius: Math.max(28, w.word.length * 4 + normalize(w.sim) * 10),
+        radius: Math.max(28, w.word.length * 4 + (w.score / 1000) * 10),
         x: viewport.cx + Math.cos(angle) * radius,
         y: viewport.cy + Math.sin(angle) * radius,
       }
@@ -136,9 +131,9 @@ function App() {
   const words = useForceLayout(rawWords)
   const revealed = target !== null
 
-  const addWord = (word: string, sim: number, ghost = false) => {
+  const addWord = (word: string, score: number, ghost = false) => {
     setRawWords((prev) =>
-      prev.some((w) => w.word === word) ? prev : [...prev, { word, sim, ghost }],
+      prev.some((w) => w.word === word) ? prev : [...prev, { word, score, ghost }],
     )
   }
 
@@ -158,7 +153,7 @@ function App() {
     if (guessed.has(w)) return
 
     if (!data.found) {
-      addWord(w, data.similarity)
+      addWord(w, data.score)
       return
     }
 
@@ -181,10 +176,10 @@ function App() {
         if (!simData) return
         simData.words
           .filter((sw) => !guessed.has(sw.word.toLowerCase()))
-          .sort((a, b) => b.similarity - a.similarity)
+          .sort((a, b) => b.score - a.score)
           .slice(0, 60)
           .forEach((g, i) => {
-            setTimeout(() => addWord(g.word.toLowerCase(), g.similarity, true), 400 + i * 200)
+            setTimeout(() => addWord(g.word.toLowerCase(), g.score, true), 400 + i * 200)
           })
     }, 600)
   }
@@ -221,7 +216,7 @@ function App() {
         </div>
 
         {words.map((w) => (
-          <Word key={w.word} word={w.word} score={w.sim} x={w.x} y={w.y} ghost={w.ghost} />
+          <Word key={w.word} word={w.word} score={w.score} x={w.x} y={w.y} ghost={w.ghost} />
         ))}
       {/* </div> */}
 

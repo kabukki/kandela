@@ -31,7 +31,7 @@ export const vocabulary = <ThrowOnError extends boolean = false>(options?: Optio
 /**
  * Guess
  */
-export const guess = <ThrowOnError extends boolean = false>(options: Options<GuessData, ThrowOnError>) => (options.client ?? client).get<GuessResponses, GuessErrors, ThrowOnError>({ url: '/guess', ...options });
+export const guess = <ThrowOnError extends boolean = false>(options: Options<GuessData, ThrowOnError>) => (options.client ?? client).post<GuessResponses, GuessErrors, ThrowOnError>({ url: '/guess', ...options });
 
 /**
  * Similar

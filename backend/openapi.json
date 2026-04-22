@@ -40,7 +40,7 @@
       }
     },
     "/guess": {
-      "get": {
+      "post": {
         "summary": "Guess",
         "operationId": "guess",
         "parameters": [
@@ -127,12 +127,10 @@
             "title": "Word",
             "description": "The word guessed by the player"
           },
-          "similarity": {
-            "type": "number",
-            "maximum": 1.0,
-            "minimum": -1.0,
-            "title": "Similarity",
-            "description": "Cosine similarity with the daily word"
+          "score": {
+            "type": "integer",
+            "title": "Score",
+            "description": "The score for the guess"
           },
           "found": {
             "type": "boolean",
@@ -143,7 +141,7 @@
         "type": "object",
         "required": [
           "word",
-          "similarity",
+          "score",
           "found"
         ],
         "title": "GuessResponse"
@@ -168,18 +166,16 @@
             "title": "Word",
             "description": "A word similar to the query"
           },
-          "similarity": {
-            "type": "number",
-            "maximum": 1.0,
-            "minimum": 0.0,
-            "title": "Similarity",
-            "description": "Cosine similarity with the query word"
+          "score": {
+            "type": "integer",
+            "title": "Score",
+            "description": "The score for the similar word"
           }
         },
         "type": "object",
         "required": [
           "word",
-          "similarity"
+          "score"
         ],
         "title": "SimilarWord"
       },
@@ -191,7 +187,7 @@
             },
             "type": "array",
             "title": "Words",
-            "description": "Top similar words ordered by similarity descending"
+            "description": "Top similar words ordered by rank descending"
           }
         },
         "type": "object",
