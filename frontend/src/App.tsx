@@ -25,7 +25,7 @@ type WordData = {
 }
 
 const normalize = (sim: number) => Math.max(0, sim)
-const toCandelas = (sim: number) => Math.round(Math.pow(normalize(sim), 1.3) * 1000)
+const toCandelas = (sim: number) => Math.round(Math.pow(normalize(sim), 1.3) * 100)
 const toRadius = (sim: number, vp: { w: number; h: number }) => {
   const minR = 40
   const maxR = Math.min(vp.w, vp.h) / 2 - 40
@@ -228,21 +228,18 @@ function App() {
       <div className="absolute bottom-0 left-0 right-0 px-7 pt-5 pb-7 z-10 bg-gradient-to-t from-bg-deep from-40% to-transparent">
         <form
           onSubmit={onSubmit}
-          className="max-w-[560px] mx-auto flex gap-[14px] items-center border-t border-rule pt-[18px]"
+          className="max-w-[560px] mx-auto flex items-center"
         >
-          <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-flame">
-            guess
-          </span>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="type a word..."
+            placeholder="type your guess..."
             autoComplete="off"
             autoFocus
             disabled={revealed}
             aria-label="Guess input"
-            className="flex-1 bg-transparent border-none outline-none text-ink font-serif text-[22px] font-normal py-1 placeholder:text-ink-faint placeholder:italic"
+            className="flex-1 bg-transparent border-none outline-none text-center text-ink font-serif text-[22px] font-normal py-1 placeholder:text-ink-faint placeholder:italic"
           />
         </form>
       </div>
