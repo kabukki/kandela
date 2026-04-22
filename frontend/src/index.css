@@ -55,14 +55,14 @@
 
 /* Body scenery: radial warmth + starfield. Tailwind can't express layered
    radial gradients on pseudo-elements, so we keep these here. */
-html, body {
+/* html, body {
   height: 100%;
   overflow: hidden;
   background: var(--color-bg-deep);
   color: var(--color-ink);
   font-family: var(--font-serif);
   font-weight: 300;
-}
+} */
 body::before {
   content: "";
   position: fixed;
