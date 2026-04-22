@@ -105,7 +105,7 @@ function useForceLayout(words: Omit<WordData, 'x' | 'y'>[]): WordData[] {
     })
 
     const sim = forceSimulation(nodes)
-      .force('charge', forceManyBody<(typeof nodes)[number]>().strength(-120).distanceMax(150))
+      .force('charge', forceManyBody<(typeof nodes)[number]>().strength(-200).distanceMax(150))
       .force('x', forceX<(typeof nodes)[number]>((d) => d.anchorX).strength(0.18))
       .force('y', forceY<(typeof nodes)[number]>((d) => d.anchorY).strength(0.18))
       .force('collide', forceCollide<(typeof nodes)[number]>((d) => d.radius).strength(0.9))
@@ -185,7 +185,7 @@ function App() {
           .sort((a, b) => b.similarity - a.similarity)
           .slice(0, 60)
           .forEach((g, i) => {
-            setTimeout(() => addWord(g.word.toLowerCase(), g.similarity, true), 400 + i * 25)
+            setTimeout(() => addWord(g.word.toLowerCase(), g.similarity, true), 400 + i * 200)
           })
     }, 600)
   }
