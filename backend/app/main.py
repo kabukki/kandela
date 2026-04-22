@@ -81,7 +81,7 @@ async def guess(q: str, model: ModelDep):
 async def similar(q: str, model: ModelDep):
     word = q.strip().lower()
     try:
-        results = get_most_similar(model, word, topn=50)
+        results = get_most_similar(model, word, topn=10)
         return SimilarWordsResponse(
             words=[
                 SimilarWord(
